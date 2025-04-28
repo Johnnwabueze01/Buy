@@ -1,14 +1,27 @@
-export default function CheckoutButton({ cartItems }: { cartItems: any[] }) {
-  const handleCheckout = async () => {
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: cartItems }),
-    });
+import { CartItem } from "../types"; // Import your types for cart items.
 
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url; // Redirect to Stripe Checkout
+export default function CheckoutButton({ cartItems }: { cartItems: CartItem[] }) {
+  const handleCheckout = async () => {
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cartItems }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to initiate checkout");
+      }
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url; // Redirect to Stripe Checkout
+      } else {
+        alert("Something went wrong with the checkout process.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error initiating checkout. Please try again.");
     }
   };
 

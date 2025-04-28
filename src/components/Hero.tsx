@@ -1,4 +1,4 @@
-import Image from "next/image"; // Use Next.js Image for optimization
+import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -15,22 +15,16 @@ const slides = [
 export default function Hero() {
   return (
     <div className="relative w-full h-[400px]">
-      <div className="flex space-x-6 md:justify-end justify-center items-center text-center lg:-mt-14 -mt-0 pb-10">
-        <Link href="/" className="text-black hover:text-gray-600 text-lg font-medium">
-          All
-        </Link>
-        <Link href="/categories/men%27s" className="text-black hover:text-gray-600 text-lg font-medium">
-          Men's
-        </Link>
-        <Link href="/categories/women%27s" className="text-black hover:text-gray-600 text-lg font-medium">
-          Women's
-        </Link>
-        <Link href="/categories/electronics" className="text-black hover:text-gray-600 text-lg font-medium">
-          Electronics
-        </Link>
-        <Link href="/categories/mobile" className="text-black hover:text-gray-600 text-lg font-medium">
-          Mobile
-        </Link>
+      <div className="flex space-x-6 md:justify-end justify-center items-center text-center pb-10">
+        {["All", "Men's", "Women's", "Electronics", "Mobile"].map((category) => (
+          <Link
+            key={category}
+            href={`/categories/${category.toLowerCase()}`}
+            className="text-black hover:text-gray-600 text-lg font-medium"
+          >
+            {category}
+          </Link>
+        ))}
       </div>
 
       <Swiper
@@ -40,10 +34,7 @@ export default function Hero() {
         loop={true}
         autoplay={{ delay: 3000 }}
         pagination={{ clickable: true }}
-        navigation={{
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        }}
+        navigation={true}
         className="h-full"
       >
         {slides.map((slide, index) => (
@@ -55,22 +46,16 @@ export default function Hero() {
               objectFit="cover"
               priority
             />
-            <div className="absolute inset-0 m-10 w-2 bg-opacity-40 flex items-baseline justify-start">
-              <h2 className="text-3xl md:text-4xl font-bold">
-                {slide.text}
-              </h2>
+            <div className="absolute inset-0 m-10 flex items-center justify-start">
+              <h2 className="text-3xl md:text-4xl font-bold text-white">{slide.text}</h2>
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
-
-      <div className="hidden md:block">
-        <div className="swiper-button-next text-white absolute top-1/2 right-5 transform -translate-y-1/2 z-10 cursor-pointer"></div>
-        <div className="swiper-button-prev text-white absolute top-1/2 left-5 transform -translate-y-1/2 z-10 cursor-pointer"></div>
-      </div>
     </div>
   );
 }
+
 
 
 

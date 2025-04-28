@@ -1,17 +1,13 @@
 import { createContext, useContext, ReactNode } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
-type User = {
-  name?: string;
-  email?: string;
-  image?: string;
-};
+interface AuthContextType {
+  user: any;
+  signIn: () => void;
+  signOut: () => void;
+}
 
-const AuthContext = createContext({
-  user: null as User | null,
-  signIn: () => {},
-  signOut: () => {},
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: session } = useSession();
@@ -23,8 +19,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
-
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
 
 /*import { createContext, useContext, ReactNode } from "react";
